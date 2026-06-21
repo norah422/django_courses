@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    {% if LANGUAGE_CODE == 'ar' %}إنشاء حساب جديد - كودكس التعليمية{% else %}Sign Up - CodeX Academy{% endif %}
+{% endblock %}
+
+{% block content %}
+<div style="max-width: 450px; margin: 40px auto; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); border: 1px solid #e9ecef;">
+    
+    <h2 style="text-align: center; color: #1a252f; margin-bottom: 25px;">
+        👤 {% if LANGUAGE_CODE == 'ar' %}إنشاء حساب طالب جديد{% else %}Create New Student Account{% endif %}
+    </h2>
+    
+    <form method="post" style="display: flex; flex-direction: column; gap: 15px;">
+        {% csrf_token %}
+        {{ form.as_p }}
+        
+        <button type="submit" class="btn-signup" style="width: 100%; padding: 12px; border: none; cursor: pointer; text-align: center; margin-top: 10px;">
+            {% if LANGUAGE_CODE == 'ar' %}تأكيد إنشاء الحساب وبدء التعلم 🚀{% else %}Confirm & Start Learning 🚀{% endif %}
+        </button>
+    </form>
+    
+    <p style="text-align: center; margin-top: 20px; font-size: 0.9rem; color: #7f8c8d;">
+        {% if LANGUAGE_CODE == 'ar' %}
+            لديك حساب بالفعل؟ <a href="/accounts/login/" style="color: #3498db; text-decoration: none; font-weight: bold;">تسجيل الدخول من هنا</a>
+        {% else %}
+            Already have an account? <a href="/accounts/login/" style="color: #3498db; text-decoration: none; font-weight: bold;">Login here</a>
+        {% endif %}
+    </p>
+</div>
+{% endblock %}

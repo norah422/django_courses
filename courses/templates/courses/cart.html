@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+
+{% block title %}{% if LANGUAGE_CODE == 'ar' %}سلة المشتريات{% else %}Shopping Cart{% endif %}{% endblock %}
+
+{% block content %}
+    <h2 style="color: #2c3e50; margin-bottom: 24px;">{% if LANGUAGE_CODE == 'ar' %}سلة المشتريات 🛒{% else %}Your Cart 🛒{% endif %}</h2>
+
+    <div style="background: white; border: 1px solid #e9ecef; border-radius: 12px; padding: 30px;">
+        {% if cart_courses %}
+            <table style="width: 100%; border-collapse: collapse; margin-bottom: 30px;">
+                <thead>
+                    <tr style="border-bottom: 2px solid #f1f3f5; text-align: {% if LANGUAGE_CODE == 'ar' %}right{% else %}left{% endif %}; color: #7f8c8d;">
+                        <th style="padding: 12px;">{% if LANGUAGE_CODE == 'ar' %}الدورة التدريبية{% else %}Course Name{% endif %}</th>
+                        <th style="padding: 12px;">{% if LANGUAGE_CODE == 'ar' %}السعر{% else %}Price{% endif %}</th>
+                        <th style="padding: 12px; text-align: center;">{% if LANGUAGE_CODE == 'ar' %}إجراء{% else %}Action{% endif %}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for course in cart_courses %}
+                        <tr style="border-bottom: 1px solid #f1f3f5;">
+                            <td style="padding: 15px; font-weight: 500;">
+                                {% if LANGUAGE_CODE == 'ar' %}{{ course.title_ar }}{% else %}{{ course.title_en }}{% endif %}
+                            </td>
+                            <td style="padding: 15px; color: #27ae60; font-weight: bold;">
+                                {% if LANGUAGE_CODE == 'ar' %}{{ course.price }} ر.س{% else %}{{ course.price }} SAR{% endif %}
+                            </td>
+                            <td style="padding: 15px; text-align: center;">
+                                <a href="{% url 'courses:remove_from_cart' course.id %}" style="color: #e74c3c; text-decoration: none; font-size: 0.9rem;">
+                                    {% if LANGUAGE_CODE == 'ar' %}حذف 🗑️{% else %}Remove 🗑️{% endif %}
+                                </a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+            <div style="display: flex; justify-content: space-between; align-items: center; background: #f8f9fa; padding: 20px; border-radius: 8px;">
+                <div>
+                    <span style="font-size: 1.1rem; color: #34495e;">{% if LANGUAGE_CODE == 'ar' %}المجموع الكلي:{% else %}Total Amount:{% endif %}</span>
+                    <strong style="font-size: 1.4rem; color: #2c3e50; margin-right: 10px; margin-left: 10px;">
+                        {% if LANGUAGE_CODE == 'ar' %}{{ total_price }} ر.س{% else %}{{ total_price }} SAR{% endif %}
+                    </strong>
+                </div>
+                <a href="{% url 'courses:checkout' %}" class="btn-primary" style="background-color: #2ecc71; padding: 12px 30px; font-size: 1rem;">
+                    {% if LANGUAGE_CODE == 'ar' %}الانتقال إلى الدفع ←{% else %}Proceed to Checkout →{% endif %}
+                </a>
+            </div>
+        {% else %}
+            <div style="text-align: center; padding: 40px; color: #7f8c8d;">
+                <p style="font-size: 1.2rem; margin-bottom: 20px;">{% if LANGUAGE_CODE == 'ar' %}سلتك فارغة حالياً، تصفح الكورسات وأضف ما يعجبك!{% else %}Your cart is empty. Explore our courses!{% endif %}</p>
+                <a href="{% url 'courses:course_list' %}" class="btn-primary">{% if LANGUAGE_CODE == 'ar' %}تصفح الدورات{% else %}Browse Courses{% endif %}</a>
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}

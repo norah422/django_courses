@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    {% if LANGUAGE_CODE == 'ar' %}كورساتي التعليمية{% else %}My Courses{% endif %}
+{% endblock %}
+
+{% block content %}
+<div style="max-width: 1000px; margin: 0 auto; padding: 30px; font-family: sans-serif; direction: {% if LANGUAGE_CODE == 'ar' %}rtl{% else %}ltr{% endif %}; text-align: start;">
+    
+    <h1 style="color: #2c3e50; margin-bottom: 5px;">
+        {% if LANGUAGE_CODE == 'ar' %}🎓 لوحة تعليمك الشخصية{% else %}🎓 Your Dashboard{% endif %}
+    </h1>
+    <p style="color: #7f8c8d; margin-bottom: 30px;">
+        {% if LANGUAGE_CODE == 'ar' %}مرحباً بك! هنا تجد جميع الدورسات التي قمت بالاستثمار فيها للتعلم.{% else %}Welcome! Here you can find all the courses you have purchased.{% endif %}
+    </p>
+
+    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 25px;">
+        {% for course in purchased_courses %}
+            <div style="background: white; border: 1px solid #e2e8f0; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.05); display: flex; flex-direction: column;">
+                <div style="padding: 20px; flex-grow: 1;">
+                    <span style="background: #eafaf1; color: #2ecc71; padding: 4px 10px; border-radius: 20px; font-size: 0.8rem; font-weight: bold; display: inline-block; margin-bottom: 10px;">
+                        {% if LANGUAGE_CODE == 'ar' %}✓ تم الشراء{% else %}✓ Purchased{% endif %}
+                    </span>
+                    <h3 style="color: #2d3748; margin: 0 0 10px 0;">
+                        {% if LANGUAGE_CODE == 'ar' %}{{ course.title_ar }}{% else %}{{ course.title_en }}{% endif %}
+                    </h3>
+                    <p style="color: #718096; font-size: 0.9rem; line-height: 1.5; margin-bottom: 20px;">
+                        {% if LANGUAGE_CODE == 'ar' %}{{ course.description_ar|truncatewords:15 }}{% else %}{{ course.description_en|truncatewords:15 }}{% endif %}
+                    </p>
+                </div>
+                <div style="padding: 15px 20px; background: #f8f9fa; border-top: 1px solid #edf2f7; text-align: center;">
+                    <a href="{% url 'courses:course_detail' course.id %}" style="display: block; background: #3182ce; color: white; padding: 10px; border-radius: 6px; text-decoration: none; font-weight: bold; font-size: 0.95rem;">
+                        {% if LANGUAGE_CODE == 'ar' %}🖥️ ابدأ المشاهدة الآن{% else %}🖥️ Start Learning Now{% endif %}
+                    </a>
+                </div>
+            </div>
+        {% empty %}
+            <div style="grid-column: 1 / -1; text-align: center; padding: 50px; background: #f7fafc; border-radius: 12px; border: 2px dashed #e2e8f0;">
+                <div style="font-size: 3rem; margin-bottom: 15px;">📚</div>
+                <h3 style="color: #4a5568;">{% if LANGUAGE_CODE == 'ar' %}لم تشترك في أي كورس بعد!{% else %}No courses joined yet!{% endif %}</h3>
+                <p style="color: #718096; margin-bottom: 20px;">{% if LANGUAGE_CODE == 'ar' %}تصفح قائمة الكورسات المتاحة وابدأ رحلتك التعليمية.{% else %}Browse our course catalog and start your learning journey.{% endif %}</p>
+                <a href="{% url 'courses:course_list' %}" style="display: inline-block; background: #2ecc71; color: white; padding: 12px 30px; border-radius: 6px; text-decoration: none; font-weight: bold;">
+                    {% if LANGUAGE_CODE == 'ar' %}تصفح الكورسات M M{% else %}Browse Courses{% endif %}
+                </a>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,139 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    {% if LANGUAGE_CODE == 'ar' %}{{ course.title_ar }}{% else %}{{ course.title_en }}{% endif %}
+{% endblock %}
+
+{% block content %}
+<div style="max-width: 900px; margin: 0 auto; padding: 20px; font-family: sans-serif; direction: {% if LANGUAGE_CODE == 'ar' %}rtl{% else %}ltr{% endif %}; text-align: start;">
+    
+    <h1 style="color: #2c3e50; margin-bottom: 10px;">
+        {% if LANGUAGE_CODE == 'ar' %}{{ course.title_ar }}{% else %}{{ course.title_en }}{% endif %}
+    </h1>
+    <p style="color: #7f8c8d; font-size: 1.1rem; line-height: 1.6; margin-bottom: 25px;">
+        {% if LANGUAGE_CODE == 'ar' %}{{ course.description_ar }}{% else %}{{ course.description_en }}{% endif %}
+    </p>
+
+    {% if has_purchased %}
+        
+        <div style="background: white; border: 1px solid #e9ecef; border-radius: 12px; padding: 24px; box-shadow: 0 4px 6px rgba(0,0,0,0.02); margin-bottom: 30px;">
+            <h3 style="color: #2c3e50; margin-top: 0; margin-bottom: 20px;">
+                {% if LANGUAGE_CODE == 'ar' %}📺 المحتوى التعليمي والفيديوهات{% else %}📺 Course Content & Videos{% endif %}
+            </h3>
+            
+            {% for video in videos %}
+                <div style="margin-bottom: 30px;">
+                    <h4 style="color: #34495e; margin-bottom: 12px;">
+                        {% if LANGUAGE_CODE == 'ar' %}{{ video.title_ar }}{% else %}{{ video.title_en }}{% endif %}
+                    </h4>
+                    <div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 8px; background: #000; box-shadow: 0 4px 8px rgba(0,0,0,0.05);">
+                        
+                        <iframe 
+                            src="{{ video.video_url }}" 
+                            style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0;" 
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                            allowfullscreen>
+                        </iframe>
+
+                    </div>
+                </div>
+            {% empty %}
+                <p style="color: #95a5a6;">{% if LANGUAGE_CODE == 'ar' %}لا توجد فيديوهات مرفوعة في هذا الكورس بعد.{% else %}No videos uploaded in this course yet.{% endif %}</p>
+            {% endfor %}
+        </div>
+
+        <div style="margin-top: 40px; border-top: 2px solid #f1f3f5; padding-top: 30px;">
+            <h3 style="color: #2c3e50; margin-bottom: 20px;">
+                {% if LANGUAGE_CODE == 'ar' %}💬 مجتمع النقاش والتعليقات{% else %}💬 Discussion Forum & Comments{% endif %}
+            </h3>
+
+            <form action="{% url 'courses:add_comment' course.id %}" method="post" style="margin-bottom: 30px;">
+                {% csrf_token %}
+                <textarea name="content" required placeholder="{% if LANGUAGE_CODE == 'ar' %}اكتب سؤالك أو تعليقك حول الدرس هنا...{% else %}Write your question or comment here...{% endif %}" style="width: 100%; height: 100px; padding: 12px; border: 1px solid #cbd5e0; border-radius: 8px; resize: vertical; box-sizing: border-box; font-size: 0.95rem;"></textarea>
+                <button type="submit" style="background-color: #2ecc71; color: white; border: none; padding: 10px 20px; font-size: 0.95rem; border-radius: 6px; cursor: pointer; margin-top: 10px; font-weight: bold;">
+                    {% if LANGUAGE_CODE == 'ar' %}نشر التعليق{% else %}Post Comment{% endif %}
+                </button>
+            </form>
+
+            <div style="display: flex; flex-direction: column; gap: 20px;">
+                {% for comment in comments %}
+                    <div style="background: #f8f9fa; border: 1px solid #edf2f7; padding: 16px; border-radius: 8px;">
+                        <div style="display: flex; justify-content: space-between; font-size: 0.85rem; color: #718096; margin-bottom: 8px;">
+                            <strong>👤 {{ comment.user.username }}</strong>
+                            <span>📅 {{ comment.created_at|date:"Y-m-d H:i" }}</span>
+                        </div>
+                        <p style="margin: 0; color: #2d3748; font-size: 0.95rem; line-height: 1.5;">{{ comment.content }}</p>
+
+                        <details style="margin-top: 10px;">
+                            <summary style="font-size: 0.85rem; color: #3182ce; cursor: pointer; user-select: none;">
+                                {% if LANGUAGE_CODE == 'ar' %}إضافة رد فرعي ↩️{% else %}Reply ↩️{% endif %}
+                            </summary>
+                            <form action="{% url 'courses:add_comment' course.id %}" method="post" style="margin-top: 10px; padding-right: 15px; border-right: 2px solid #e2e8f0;">
+                                {% csrf_token %}
+                                <input type="hidden" name="parent_id" value="{{ comment.id }}">
+                                <textarea name="content" required placeholder="{% if LANGUAGE_CODE == 'ar' %}اكتب ردك هنا...{% else %}Write your reply here...{% endif %}" style="width: 100%; height: 70px; padding: 8px; border: 1px solid #cbd5e0; border-radius: 6px; resize: vertical; box-sizing: border-box; font-size: 0.9rem;"></textarea>
+                                <button type="submit" style="background-color: #3182ce; color: white; border: none; padding: 6px 14px; font-size: 0.85rem; border-radius: 4px; cursor: pointer; margin-top: 6px;">
+                                    {% if LANGUAGE_CODE == 'ar' %}إرسال الرد{% else %}Submit Reply{% endif %}
+                                </button>
+                            </form>
+                        </details>
+
+                        {% if comment.replies.all %}
+                            <div style="margin-top: 15px; padding-right: 20px; border-right: 2px dashed #cbd5e0; display: flex; flex-direction: column; gap: 12px;">
+                                {% for reply in comment.replies.all %}
+                                    <div style="background: white; border: 1px solid #e2e8f0; padding: 12px; border-radius: 6px;">
+                                        <div style="display: flex; justify-content: space-between; font-size: 0.8rem; color: #a0aec0; margin-bottom: 6px;">
+                                            <strong>👤 {{ reply.user.username }}</strong>
+                                            <span>{{ reply.created_at|date:"Y-m-d H:i" }}</span>
+                                        </div>
+                                        <p style="margin: 0; color: #4a5568; font-size: 0.9rem;">{{ reply.content }}</p>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                {% empty %}
+                    <p style="color: #a0aec0; font-size: 0.95rem; text-align: center;">{% if LANGUAGE_CODE == 'ar' %}لا توجد استفسارات بعد.{% else %}No questions yet.{% endif %}</p>
+                {% endfor %}
+            </div>
+        </div>
+
+    {% else %}
+        
+        <div style="text-align: center; background: #fff5f5; border: 1px solid #feb2b2; padding: 40px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.02); margin-top: 20px;">
+            <div style="font-size: 3.5rem; color: #e53e3e; margin-bottom: 15px;">🔒</div>
+            <h2 style="color: #2d3748; margin-top: 0; margin-bottom: 10px;">
+                {% if LANGUAGE_CODE == 'ar' %}هذا المحتوى مغلق!{% else %}This Content is Locked!{% endif %}
+            </h2>
+            <p style="color: #4a5568; font-size: 1.05rem; max-width: 500px; margin: 0 auto 25px; line-height: 1.6;">
+                {% if LANGUAGE_CODE == 'ar' %}
+                    هذا الكورس مدفوع ومحمي. للاطلاع على الفيديوهات التعليمية والمشاركة في قسم التعليقات، يرجى الاشتراك وتفعيل الوصول عبر بوابة الدفع الآمنة Stripe.
+                {% else %}
+                    This is a premium course. To unlock the educational videos and join the discussions, please subscribe via our secure Stripe payment gateway.
+                {% endif %}
+            </p>
+            
+            <div style="background: white; display: inline-block; padding: 15px 40px; border-radius: 8px; border: 1px solid #e2e8f0; margin-bottom: 25px;">
+                <span style="font-size: 1.1rem; color: #718096;">{% if LANGUAGE_CODE == 'ar' %}قيمة الاستثمار:{% else %}Price:{% endif %}</span>
+                <strong style="font-size: 1.5rem; color: #27ae60; margin-right: 8px; margin-left: 8px;">
+                    {% if LANGUAGE_CODE == 'ar' %}{{ course.price }} ر.س{% else %}{{ course.price }} SAR{% endif %}
+                </strong>
+            </div>
+            <br>
+
+            {% if request.user.is_authenticated %}
+                <a href="{% url 'courses:create_checkout_session' course.id %}" style="display: inline-block; background-color: #6772e5; color: white; padding: 14px 40px; font-size: 1.1rem; border-radius: 8px; text-decoration: none; font-weight: bold; box-shadow: 0 4px 6px rgba(50,50,93,.11);">
+                    {% if LANGUAGE_CODE == 'ar' %}💳 اشترِ الآن وابدأ التعلم{% else %}💳 Buy Now & Start Learning{% endif %}
+                </a>
+            {% else %}
+                <a href="/accounts/login/?next={% url 'courses:create_checkout_session' course.id %}" style="display: inline-block; background-color: #e67e22; color: white; padding: 14px 40px; font-size: 1.1rem; border-radius: 8px; text-decoration: none; font-weight: bold; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+                    {% if LANGUAGE_CODE == 'ar' %}👤 سجّل دخولك أولاً لإتمام الشراء{% else %}👤 Login First to Purchase{% endif %}
+                </a>
+            {% endif %}
+
+        </div>
+
+    {% endif %}
+
+</div>
+{% endblock %}

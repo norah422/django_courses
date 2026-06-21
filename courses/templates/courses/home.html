@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    {% if LANGUAGE_CODE == 'ar' %}الرئيسية - كودكس التعليمية{% else %}Home - Codex Academy{% endif %}
+{% endblock %}
+
+{% block content %}
+<div style="font-family: sans-serif; max-width: 1100px; margin: 0 auto; padding: 20px; direction: {% if LANGUAGE_CODE == 'ar' %}rtl{% else %}ltr{% endif %}; text-align: start;">
+    
+    <div style="background: linear-gradient(135deg, #2c3e50 0%, #1a252f 100%); border-radius: 16px; padding: 60px 40px; text-align: center; color: white; margin-bottom: 50px; box-shadow: 0 10px 20px rgba(0,0,0,0.05);">
+        <h1 style="font-size: 2.5rem; margin-top: 0; margin-bottom: 15px; font-weight: bold;">
+            {% if LANGUAGE_CODE == 'ar' %}الانطلاق في رحلة التميز البرمجي والتعليمي 💻{% else %}Embark on Your Coding Journey 💻{% endif %}
+        </h1>
+        <p style="font-size: 1.2rem; color: #b0bec5; max-width: 700px; margin: 0 auto 30px; line-height: 1.6;">
+            {% if LANGUAGE_CODE == 'ar' %}
+                منصة تعليمية متكاملة تقدم لكم أفضل الكورسات التفاعلية بأحدث الأساليب البرمجية والمناهج العالمية المقفلة بذكاء لحماية وتأمين المحتوى العلمي.
+            {% else %}
+                An integrated educational platform offering top interactive courses using the latest modern programming standards and secure intelligent structures.
+            {% endif %}
+        </p>
+        <a href="{% url 'courses:course_list' %}" style="display: inline-block; background-color: #2ecc71; color: white; padding: 15px 35px; font-size: 1.1rem; border-radius: 8px; text-decoration: none; font-weight: bold; box-shadow: 0 4px 15px rgba(46, 204, 113, 0.3);">
+            {% if LANGUAGE_CODE == 'ar' %}🚀 تصفح الدورات المتاحة الآن{% else %}🚀 Browse Available Courses{% endif %}
+        </a>
+    </div>
+
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; text-align: center; margin-bottom: 50px;">
+        <div style="background: white; border: 1px solid #e2e8f0; padding: 25px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.01);">
+            <div style="font-size: 2rem; color: #2ecc71; font-weight: bold; margin-bottom: 5px;">+1,200</div>
+            <div style="color: #718096; font-size: 0.95rem;">{% if LANGUAGE_CODE == 'ar' %}طلاب وطالبات{% else %}Students Enrolled{% endif %}</div>
+        </div>
+        <div style="background: white; border: 1px solid #e2e8f0; padding: 25px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.01);">
+            <div style="font-size: 2rem; color: #3498db; font-weight: bold; margin-bottom: 5px;">🔒 Stripe</div>
+            <div style="color: #718096; font-size: 0.95rem;">{% if LANGUAGE_CODE == 'ar' %}دفع آمن ومحمي 100%{% else %}100% Secure Payments{% endif %}</div>
+        </div>
+        <div style="background: white; border: 1px solid #e2e8f0; padding: 25px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.01);">
+            <div style="font-size: 2rem; color: #e67e22; font-weight: bold; margin-bottom: 5px;">🌐 2-in-1</div>
+            <div style="color: #718096; font-size: 0.95rem;">{% if LANGUAGE_CODE == 'ar' %}دعم كامل للغتين (عربي/إنجليزي){% else %}Bilingual Support{% endif %}</div>
+        </div>
+    </div>
+
+    <div style="margin-bottom: 40px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
+            <h2 style="color: #2c3e50; margin: 0; font-size: 1.6rem;">
+                {% if LANGUAGE_CODE == 'ar' %}🌟 دورات نوصي بها{% else %}🌟 Recommended Courses{% endif %}
+            </h2>
+            <a href="{% url 'courses:course_list' %}" style="color: #3498db; text-decoration: none; font-weight: bold; font-size: 0.95rem;">
+                {% if LANGUAGE_CODE == 'ar' %}شاهد الكل ←{% else %}View All ←{% endif %}
+            </a>
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 24px;">
+            {% for course in featured_courses %}
+                <div style="background: white; border: 1px solid #e2e8f0; border-radius: 12px; overflow: hidden; display: flex; flex-direction: column; justify-content: space-between; box-shadow: 0 4px 6px rgba(0,0,0,0.01);">
+                    <div style="padding: 24px;">
+                        <h3 style="margin-top: 0; color: #2c3e50; font-size: 1.2rem; margin-bottom: 12px;">
+                            {% if LANGUAGE_CODE == 'ar' %}{{ course.title_ar }}{% else %}{{ course.title_en }}{% endif %}
+                        </h3>
+                        <p style="color: #718096; font-size: 0.9rem; line-height: 1.5; margin-bottom: 0;">
+                            {% if LANGUAGE_CODE == 'ar' %}{{ course.description_ar|truncatewords:15 }}{% else %}{{ course.description_en|truncatewords:15 }}{% endif %}
+                        </p>
+                    </div>
+                    <div style="padding: 15px 24px; background: #f8f9fa; border-top: 1px solid #edf2f7; display: flex; justify-content: space-between; align-items: center;">
+                        <strong style="color: #27ae60;">
+                            {% if LANGUAGE_CODE == 'ar' %}{{ course.price }} ر.س{% else %}{{ course.price }} SAR{% endif %}
+                        </strong>
+                        <a href="{% url 'courses:course_detail' course.id %}" style="background: #2c3e50; color: white; padding: 6px 14px; font-size: 0.85rem; border-radius: 6px; text-decoration: none; font-weight: bold;">
+                            {% if LANGUAGE_CODE == 'ar' %}تفاصيل{% else %}Details{% endif %}
+                        </a>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

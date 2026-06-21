@@ -1,0 +1,242 @@
+{% load i18n %}
+<!DOCTYPE html>
+<html lang="{{ LANGUAGE_CODE }}" dir="{% if LANGUAGE_CODE == 'ar' %}rtl{% else %}ltr{% endif %}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}أكاديمية كودكس التعليمية{% endblock %}</title>
+    <style>
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; 
+            margin: 0; 
+            padding: 0; 
+            background-color: #f8f9fa; 
+            color: #212529;
+        }
+        
+        .navbar { 
+            background-color: #1a252f; 
+            padding: 15px 40px; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+            gap: 20px;
+        }
+
+        .nav-right-side {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+        }
+
+        .brand-logo {
+            color: #ffffff;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .nav-links a { 
+            color: #ffffff; 
+            text-decoration: none; 
+            font-weight: 500;
+            font-size: 0.95rem;
+            transition: color 0.2s ease;
+        }
+        .nav-links a:hover { 
+            color: #3498db; 
+        }
+
+        .nav-left-side {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .lang-btn { 
+            background-color: transparent; 
+            color: #ffffff; 
+            border: 1px solid rgba(255,255,255,0.4); 
+            padding: 6px 16px; 
+            border-radius: 20px; 
+            cursor: pointer; 
+            font-weight: 500;
+            font-size: 0.85rem;
+            transition: all 0.2s ease;
+        }
+        .lang-btn:hover { 
+            background-color: #ffffff;
+            color: #1a252f;
+            border-color: #ffffff;
+        }
+
+        .btn-login {
+            text-decoration: none; 
+            color: #ffffff; 
+            padding: 7px 15px; 
+            font-size: 0.9rem; 
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+        .btn-login:hover {
+            color: #3498db;
+        }
+
+        .btn-signup {
+            text-decoration: none; 
+            background: #3498db; 
+            color: white; 
+            padding: 7px 18px; 
+            border-radius: 6px; 
+            font-size: 0.9rem; 
+            font-weight: bold;
+            transition: background 0.2s ease;
+        }
+        .btn-signup:hover {
+            background: #2980b9;
+        }
+
+        .user-badge {
+            background: rgba(255, 255, 255, 0.08); 
+            padding: 6px 16px; 
+            border-radius: 20px; 
+            display: flex; 
+            align-items: center; 
+            gap: 8px; 
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+        .user-badge .username {
+            color: #edf2f7; 
+            font-weight: 500; 
+            font-size: 0.9rem;
+        }
+
+        /* تنسيق زر الخروج ليرسل الطلب كـ Form احترافي بدون شكل الزر التقليدي */
+        .btn-logout-submit {
+            background: none;
+            border: none;
+            color: #ff8a80;
+            font-size: 0.9rem; 
+            font-weight: 600; 
+            cursor: pointer;
+            padding: 0;
+            font-family: inherit;
+            transition: color 0.2s;
+        }
+        .btn-logout-submit:hover {
+            color: #ff5252;
+        }
+        
+        .container { 
+            max-width: 1000px; 
+            margin: 40px auto; 
+            padding: 0 20px; 
+            min-height: 70vh;
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        
+        <div class="nav-right-side">
+            <a href="/" class="brand-logo">
+                <span>🎓</span>
+                <span>{% if LANGUAGE_CODE == 'ar' %}كودكس التعليمية{% else %}CodeX Academy{% endif %}</span>
+            </a>
+            
+            <div class="nav-links">
+                <a href="/">
+                    {% if LANGUAGE_CODE == 'ar' %}الرئيسية{% else %}Home{% endif %}
+                </a>
+                <a href="/courses/">
+                    {% if LANGUAGE_CODE == 'ar' %}الكورسات{% else %}Courses{% endif %}
+                </a>
+                
+                {% if request.user.is_authenticated %}
+                <a href="{% url 'courses:my_courses' %}">
+                    {% if LANGUAGE_CODE == 'ar' %}دوراتي التعليمية{% else %}My Courses{% endif %}
+                </a>
+                {% endif %}
+
+                <a href="/blog/">
+                    {% if LANGUAGE_CODE == 'ar' %}المدونة{% else %}Blog{% endif %}
+                </a>
+            </div>
+        </div>
+
+        <div class="nav-left-side">
+            
+            {% if request.user.is_authenticated %}
+                <div class="user-badge">
+                    <span style="font-size: 0.95rem;">👤</span>
+                    <span class="username">
+                        {% if LANGUAGE_CODE == 'ar' %}مرحباً، {{ request.user.username }}{% else %}Welcome, {{ request.user.username }}{% endif %}
+                    </span>
+                </div>
+                
+                <form action="/accounts/logout/" method="post" style="display: inline; margin: 0; padding: 0;">
+                    {% csrf_token %}
+                    <button type="submit" class="btn-logout-submit">
+                        {% if LANGUAGE_CODE == 'ar' %}تسجيل الخروج{% else %}Logout{% endif %}
+                    </button>
+                </form>
+            {% else %}
+                <a href="/accounts/login/" class="btn-login">
+                    {% if LANGUAGE_CODE == 'ar' %}تسجيل الدخول{% else %}Login{% endif %}
+                </a>
+                <a href="/accounts/signup/" class="btn-signup">
+                    {% if LANGUAGE_CODE == 'ar' %}إنشاء حساب{% else %}Sign Up{% endif %}
+                </a>
+            {% endif %}
+
+            <div>
+                <form action="{% url 'set_language' %}" method="post" style="display: inline; margin: 0; padding: 0;">
+                    {% csrf_token %}
+                    <input name="next" type="hidden" value="{{ request.get_full_path }}">
+                    {% if LANGUAGE_CODE == 'ar' %}
+                        <input type="hidden" name="language" value="en">
+                        <button type="submit" class="lang-btn">English</button>
+                    {% else %}
+                        <input type="hidden" name="language" value="ar">
+                        <button type="submit" class="lang-btn">العربية</button>
+                    {% endif %}
+                </form>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        {% block content %}
+        {% endblock %}
+    </div>
+
+    <footer style="background-color: #1a252f; color: #ffffff; text-align: center; padding: 25px 0; margin-top: 60px; font-size: 0.9rem; border-top: 3px solid #3498db;">
+        <div>
+            {% if LANGUAGE_CODE == 'ar' %}
+                © 2026 جميع الحقوق محفوظة لمنصة كودكس التعليمية
+            {% else %}
+                © 2026 CodeX Academy. All Rights Reserved.
+            {% endif %}
+        </div>
+        <div style="color: #7f8c8d; font-size: 0.8rem; margin-top: 7px; font-weight: 500;">
+            {% if LANGUAGE_CODE == 'ar' %}
+                تم التطوير بكل شغف بواسطة نورة عبد العزيز فهد الخريجة
+            {% else %}
+                Developed with passion by Noura Abdulaziz Fahad Al-Kharraj
+            {% endif %}
+        </div>
+    </footer>
+
+</body>
+</html>

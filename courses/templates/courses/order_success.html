@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    {% if LANGUAGE_CODE == 'ar' %}تم الشراء بنجاح! 🎉{% else %}Purchase Successful! 🎉{% endif %}
+{% endblock %}
+
+{% block content %}
+<div style="max-width: 600px; margin: 60px auto; padding: 40px; text-align: center; background: white; border: 1px solid #e2e8f0; border-radius: 16px; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);">
+    
+    <div style="font-size: 4.5rem; color: #2ecc71; margin-bottom: 20px; animation: scaleUp 0.5s ease-out;">
+        🎉
+    </div>
+
+    <h1 style="color: #2c3e50; margin-top: 0; margin-bottom: 15px;">
+        {% if LANGUAGE_CODE == 'ar' %}شكراً لك! تم الشراء بنجاح{% else %}Thank You! Purchase Successful{% endif %}
+    </h1>
+    
+    <p style="color: #4a5568; font-size: 1.1rem; line-height: 1.6; margin-bottom: 30px;">
+        {% if LANGUAGE_CODE == 'ar' %}
+            لقد تم تفعيل اشتراكك في كورس <strong>"{{ course.title_ar }}"</strong> بنجاح. يمكنك الآن العودة لصفحة الكورس لمشاهدة جميع الفيديوهات التعليمية والمشاركة في مجتمع النقاش.
+        {% else %}
+            Your subscription to the course <strong>"{{ course.title_en }}"</strong> has been successfully activated. You can now return to the course page to watch all educational videos and join the discussion forum.
+        {% endif %}
+    </p>
+
+    <a href="{% url 'courses:course_detail' course.id %}" style="display: inline-block; background-color: #2ecc71; color: white; padding: 14px 35px; font-size: 1.05rem; border-radius: 8px; text-decoration: none; font-weight: bold; box-shadow: 0 4px 6px rgba(46, 204, 113, 0.2); transition: background 0.2s;">
+        {% if LANGUAGE_CODE == 'ar' %}🔓 انتقل إلى محتوى الكورس الآن{% else %}🔓 Go to Course Content Now{% endif %}
+    </a>
+
+</div>
+
+<style>
+    @keyframes scaleUp {
+        0% { transform: scale(0); }
+        100% { transform: scale(1); }
+    }
+</style>
+{% endblock %}

@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    {% if LANGUAGE_CODE == 'ar' %}الأكاديمية - المدونة{% else %}Academy - Blog{% endif %}
+{% endblock %}
+
+{% block content %}
+    <h2 style="color: #2c3e50; margin-bottom: 24px; font-size: 1.6rem; font-weight: 600;">
+        {% if LANGUAGE_CODE == 'ar' %}المقالات والمستجدات{% else %}Articles & Updates{% endif %}
+    </h2>
+    
+    <div style="display: flex; flex-direction: column; gap: 24px;">
+    {% for post in posts %}
+        <div class="card" style="display: flex; flex-direction: row; gap: 20px; overflow: hidden; align-items: center; padding: 20px;">
+            
+            {% if post.image %}
+                <div style="width: 200px; height: 130px; flex-shrink: 0; border-radius: 8px; overflow: hidden;">
+                    <img src="{{ post.image.url }}" alt="{{ post.title_ar }}" style="width: 100%; height: 100%; object-fit: cover;">
+                </div>
+            {% else %}
+                <div style="width: 200px; height: 130px; flex-shrink: 0; background: linear-gradient(135deg, #7f8c8d 0%, #95a5a6 100%); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: rgba(255,255,255,0.2); font-family: monospace; font-size: 2rem; font-weight: bold; user-select: none;">
+                    {...}
+                </div>
+            {% endif %}
+
+            <div style="flex-grow: 1;">
+                <h3 style="margin-top: 0; color: #2c3e50; font-size: 1.3rem; margin-bottom: 8px;">
+                    {% if LANGUAGE_CODE == 'ar' %}{{ post.title_ar }}{% else %}{{ post.title_en }}{% endif %}
+                </h3>
+                
+                <div style="color: #95a5a6; font-size: 0.85rem; margin-bottom: 12px;">
+                    <span>{% if LANGUAGE_CODE == 'ar' %}بواسطة:{% else %}By:{% endif %} {{ post.author.username }}</span>
+                    <span style="margin: 0 10px;">|</span>
+                    <span>{% if LANGUAGE_CODE == 'ar' %}تاريخ النشر:{% else %}Published on:{% endif %} {{ post.created_at|date:"Y-m-d" }}</span>
+                </div>
+                
+                <p style="color: #555; font-size: 0.95rem; line-height: 1.6; margin-bottom: 15px; margin-top: 0;">
+                    {% if LANGUAGE_CODE == 'ar' %}{{ post.content_ar|truncatewords:20 }}{% else %}{{ post.content_en|truncatewords:20 }}{% endif %}
+                </p>
+                
+                <a href="{% url 'blog:post_detail' post.id %}" style="color: #3498db; font-weight: 600; text-decoration: none; font-size: 0.9rem;">
+                    {% if LANGUAGE_CODE == 'ar' %}قراءة المقال كاملاً ←{% else %}Read Full Article →{% endif %}
+                </a>
+            </div>
+        </div>
+    {% empty %}
+        <div style="background: #ffffff; border: 1px solid #e9ecef; border-radius: 8px; padding: 30px; text-align: center; color: #7f8c8d; width: 100%;">
+            {% if LANGUAGE_CODE == 'ar' %}لا توجد مقالات منشورة حالياً في المدونة.{% else %}No articles published in the blog yet.{% endif %}
+        </div>
+    {% endfor %}
+    </div>
+{% endblock %}

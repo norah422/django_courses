@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+
+{% block title %}الأكاديمية - الدورات التدريبية{% endblock %}
+
+{% block content %}
+    <h2 style="color: #2c3e50; margin-bottom: 24px; font-size: 1.6rem; font-weight: 600;">
+        {% if LANGUAGE_CODE == 'ar' %}الدورات المتاحة حالياً{% else %}Available Courses{% endif %}
+    </h2>
+    
+    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 24px;">
+    {% for course in courses %}
+        <div class="card" style="display: flex; flex-direction: column; justify-content: space-between; overflow: hidden; padding: 0;">
+            
+            {% if course.image %}
+                <div style="width: 100%; height: 160px; overflow: hidden;">
+                    <img src="{{ course.image.url }}" alt="{{ course.title_ar }}" style="width: 100%; height: 100%; object-fit: cover;">
+                </div>
+            {% else %}
+                <div class="course-banner" style="background: linear-gradient(135deg, #1a252f 0%, #34495e 100%); height: 160px; display: flex; align-items: center; justify-content: center; color: rgba(255,255,255,0.1); font-family: monospace; font-size: 3rem; font-weight: bold; user-select: none;">
+                    &lt;/&gt;
+                </div>
+            {% endif %}
+
+            <div style="padding: 24px; flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between;">
+                <div>
+                    <h3 style="margin-top: 0; color: #2c3e50; font-size: 1.2rem; margin-bottom: 12px; line-height: 1.4;">
+                        {% if LANGUAGE_CODE == 'ar' %}{{ course.title_ar }}{% else %}{{ course.title_en }}{% endif %}
+                    </h3>
+                    
+                    <p style="color: #666; font-size: 0.9rem; line-height: 1.5; margin-bottom: 20px;">
+                        {% if LANGUAGE_CODE == 'ar' %}{{ course.description_ar }}{% else %}{{ course.description_en }}{% endif %}
+                    </p>
+                </div>
+                
+                <div style="display: flex; justify-content: space-between; align-items: center; padding-top: 15px; border-top: 1px solid #f1f3f5;">
+                    <span style="font-size: 1.1rem; color: #27ae60; font-weight: 600;">
+                        {% if LANGUAGE_CODE == 'ar' %}
+                            {{ course.price }} ر.س
+                        {% else %}
+                            {{ course.price }} SAR
+                        {% endif %}
+                    </span>
+                    
+                    <a href="{% url 'courses:course_detail' course.id %}" class="btn-primary" style="padding: 8px 16px; font-size: 0.85rem;">
+                        {% if LANGUAGE_CODE == 'ar' %}عرض تفاصيل الدورة{% else %}View Course Details{% endif %}
+                    </a>
+                </div>
+            </div>
+
+        </div>
+    {% empty %}
+        <div style="background: #ffffff; border: 1px solid #e9ecef; border-radius: 8px; padding: 30px; text-align: center; color: #7f8c8d; grid-column: 1 / -1;">
+            {% if LANGUAGE_CODE == 'ar' %}لا توجد دورات متاحة حالياً.{% else %}No courses available at the moment.{% endif %}
+        </div>
+    {% endfor %}
+    </div>
+{% endblock %}
