@@ -14,15 +14,19 @@ class CourseAdmin(admin.ModelAdmin):
     list_display = ('title_ar', 'title_en', 'price', 'video_count')
     search_fields = ('title_ar', 'title_en', 'description_ar', 'description_en')
     
-    def get_queryset(self, request):
+    # دالة تحسين الأداء وجلب البيانات ديناميكياً
+    def get_queryset(self, request):  
         queryset = super().get_queryset(request)
+        # استخدام الـ annotate وعمل Count لحساب عدد الفيديوهات المرتبطة بكل كورس في استعلام واحد (Query) لتوفير جهد قاعدة البيانات
         return queryset.annotate(video_count=Count('videos'))
 
+    # دالة برمجية لقراءة القيمة المحسوبة (video_count) وعرضها داخل عمود الجدول
     def video_count(self, obj):
         return obj.video_count
     
     video_count.short_description = 'Number of Videos'
 
+# 3️⃣ تخصيص لوحة تحكم التعليقات (Comment Admin)
 @admin.register(Comment)
 class CommentAdmin(admin.ModelAdmin):
     list_display = ('user', 'course', 'created_at')
