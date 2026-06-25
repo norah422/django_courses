@@ -131,8 +131,8 @@ STATIC_URL = 'static/'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-STRIPE_PUBLISHABLE_KEY = 'STRIPE_PUBLISHABLE_KEY'
-STRIPE_SECRET_KEY = 'STRIPE_SECRET_KEY'
+STRIPE_PUBLISHABLE_KEY = os.environ.get('STRIPE_PUBLISHABLE_KEY', 'placeholder_for_dev')
+STRIPE_SECRET_KEY = os.environ.get('STRIPE_SECRET_KEY', 'placeholder_for_dev')
 
 LOGOUT_REDIRECT_URL = '/'
 LOGIN_REDIRECT_URL = '/'
