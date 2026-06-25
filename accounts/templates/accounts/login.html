@@ -8,7 +8,6 @@
     
     <form method="post" style="display: flex; flex-direction: column; gap: 15px;">
         {% csrf_token %}
-       # بدلاً من كتابة كود HTML طويل لكل حقل (اسم المستخدم، الباسوورد، التنسيقات)، هذا السطر السحري يطلب من جيانغو توليد هذه الحقول تلقائياً وتغليفها داخل وسوم فقرات <p> لتظهر منسقة وجاهزة.
         {{ form.as_p }}
         <button type="submit" class="btn-signup" style="width: 100%; padding: 12px; border: none; cursor: pointer; text-align: center; margin-top: 10px;">
             دخول 🔓
